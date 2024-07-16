@@ -18,7 +18,7 @@ data class OfflineTtsModelConfig(
     var vits: OfflineTtsVitsModelConfig,
     var numThreads: Int = 1,
     var debug: Boolean = false,
-    var provider: String = "cpu",
+    var provider: String = "nnapi",
 )
 
 data class OfflineTtsConfig(
@@ -179,7 +179,7 @@ fun getOfflineTtsConfig(
             ),
             numThreads = 2,
             debug = true,
-            provider = "cpu",
+            provider = "nnapi",
         ),
         ruleFsts = ruleFsts,
         ruleFars = ruleFars,

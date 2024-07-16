@@ -116,10 +116,6 @@ jobs:
           echo "----"
           echo $all_apks
           echo "----"
-          for apk in ${all_apks[@]}; do
-            n=$(echo $apk | sed -e s/-signed//)
-            mv -v $apk $n
-          done
 
           cd ..
 

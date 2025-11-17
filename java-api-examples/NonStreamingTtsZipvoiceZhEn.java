@@ -40,7 +40,7 @@ public class NonStreamingTtsZipvoiceEn {
 
     long start = System.currentTimeMillis();
     String prompt_text = "周日被我射熄火了，所以今天是周一。";
-    GeneratedAudio audio = tts.generateWithPrompt(text, prompt_text, reader.getSamples(), reader.getSampleRate());
+    GeneratedAudio audio = tts.generateWithPrompt(text, prompt_text, reader.getSamples(), reader.getSampleRate(), 1.0f, 20);
     long stop = System.currentTimeMillis();
 
     float timeElapsedSeconds = (stop - start) / 1000.0f;

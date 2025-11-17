@@ -555,6 +555,15 @@ def get_zipvoice_models() -> List[TtsModel]:
             lang="en",
             lang2="zh",
         ),
+        TtsModel(
+            model_dir="sherpa-onnx-zipvoice-distill-zh-en-emilia",
+            text_model="text_encoder_int8.onnx",
+            flow_matching_model="fm_decoder_int8.onnx",
+            vocoder="vocos_24khz.onnx",
+            pinyin_dict="pinyin.raw",
+            lang="en",
+            lang2="zh",
+        ),
     ]
     for m in multi_lingual_models:
         m.data_dir = f"{m.model_dir}/espeak-ng-data"

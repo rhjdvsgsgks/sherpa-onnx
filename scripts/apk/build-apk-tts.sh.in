@@ -49,7 +49,15 @@ wget -qq https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/$mod
 tar xf $model_dir.tar.bz2
 rm $model_dir.tar.bz2
 
-{% if tts_model.vocoder %}
+{% if tts_model.is_zipvoice %}
+  {% if tts_model.text_model == "text_encoder.onnx" %}
+    rm "$model_dir/text_encoder_int8.onnx" "$model_dir/fm_decoder_int8.onnx"
+  {% elif tts_model.text_model == "text_encoder_int8.onnx" %}
+    rm "$model_dir/text_encoder.onnx" "$model_dir/fm_decoder.onnx"
+  {% endif %}
+{% endif %}
+
+{% if tts_model.vocoder and not tts_model.is_zipvoice %}
   curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/vocoder-models/$vocoder
 {% endif %}
 

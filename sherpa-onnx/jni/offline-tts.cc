@@ -294,6 +294,7 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptImpl(JNIEnv *env, jobjec
   env->SetObjectArrayElement(obj_arr, 1, NewInteger(env, audio.sample_rate));
 
   env->ReleaseStringUTFChars(text, p_text);
+  env->ReleaseStringUTFChars(prompt_text, p_prompt_text);
   env->ReleaseFloatArrayElements(prompt_samples, prompt_samples_elements, JNI_ABORT);
 
   return obj_arr;
@@ -393,6 +394,7 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
         auto className = env->GetStringUTFChars(classString, NULL);
         SHERPA_ONNX_LOGE("name is: %s", className);
         env->ReleaseStringUTFChars(classString, className);
+        //SHERPA_ONNX_LOGE("Generate %s %s %d %d %d", p_text.c_str(), p_prompt_text.c_str(), sample_rate, speed, num_step);
 #endif
 
     jmethodID mid = env->GetMethodID(cls, "invoke", "([F)Ljava/lang/Integer;");
@@ -424,6 +426,7 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
   env->SetObjectArrayElement(obj_arr, 1, NewInteger(env, audio.sample_rate));
 
   env->ReleaseStringUTFChars(text, p_text);
+  env->ReleaseStringUTFChars(prompt_text, p_prompt_text);
   env->ReleaseFloatArrayElements(prompt_samples, prompt_samples_elements, JNI_ABORT);
 
   return obj_arr;

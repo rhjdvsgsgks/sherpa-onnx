@@ -378,7 +378,7 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
                       float /*progress*/) -> int {
     jclass cls = env->GetObjectClass(callback);
 
-#if 0
+#if 1
         // this block is for debugging only
         // see also
         // https://jnjosh.com/posts/kotlinfromcpp/

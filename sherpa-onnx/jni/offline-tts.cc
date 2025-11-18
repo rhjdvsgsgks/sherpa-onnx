@@ -425,9 +425,11 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
   env->SetObjectArrayElement(obj_arr, 0, samples_arr);
   env->SetObjectArrayElement(obj_arr, 1, NewInteger(env, audio.sample_rate));
 
+      SHERPA_ONNX_LOGE("before free");
   env->ReleaseStringUTFChars(text, p_text);
   env->ReleaseStringUTFChars(prompt_text, p_prompt_text);
   env->ReleaseFloatArrayElements(prompt_samples, prompt_samples_elements, JNI_ABORT);
+      SHERPA_ONNX_LOGE("after free");
 
   return obj_arr;
 }

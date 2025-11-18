@@ -89,8 +89,10 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
     auto ans = Process(tokens, prompt_tokens, prompt_samples, sample_rate, speed,
                    num_steps);
     if (callback) {
+      SHERPA_ONNX_LOGE("start callback");
       callback(ans.samples.data(), ans.samples.size(), 1.0);
     }
+      SHERPA_ONNX_LOGE("finish callback");
     return ans;
   }
 

@@ -367,13 +367,16 @@ JNIEXPORT jobjectArray JNICALL
 Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
     JNIEnv *env, jobject /*obj*/, jlong ptr, jstring text, jstring prompt_text, jfloatArray prompt_samples, jint sample_rate,
     jfloat speed, jint num_step, jobject callback) {
+      SHERPA_ONNX_LOGE("generateWithPromptWithCallbackImpl enter");
   const char *p_text = env->GetStringUTFChars(text, nullptr);
   const char *p_prompt_text = env->GetStringUTFChars(prompt_text, nullptr);
 
+        //SHERPA_ONNX_LOGE("generateWithPromptWithCallbackImpl enter t %s p %s sr %d sp %d st %d", p_text, p_prompt_text, sample_rate, speed, num_step);
   jfloat *prompt_samples_elements = env->GetFloatArrayElements(prompt_samples, nullptr);
   jsize prompt_samples_n = env->GetArrayLength(prompt_samples);
   std::vector<float> prompt_samples_vec(prompt_samples_elements, prompt_samples_elements + prompt_samples_n);
 
+      SHERPA_ONNX_LOGE("generateWithPromptWithCallbackImpl prompt_samples_vec");
   std::function<int32_t(const float *, int32_t, float)> callback_wrapper =
       [env, callback](const float *samples, int32_t n,
                       float /*progress*/) -> int {
@@ -394,7 +397,6 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
         auto className = env->GetStringUTFChars(classString, NULL);
         SHERPA_ONNX_LOGE("name is: %s", className);
         env->ReleaseStringUTFChars(classString, className);
-        //SHERPA_ONNX_LOGE("Generate %s %s %d %d %d", p_text.c_str(), p_prompt_text.c_str(), sample_rate, speed, num_step);
 #endif
 
     jmethodID mid = env->GetMethodID(cls, "invoke", "([F)Ljava/lang/Integer;");
@@ -412,8 +414,11 @@ Java_com_k2fsa_sherpa_onnx_OfflineTts_generateWithPromptWithCallbackImpl(
     return env->CallIntMethod(should_continue, int_value_mid);
   };
 
+      SHERPA_ONNX_LOGE("generateWithPromptWithCallbackImpl callback_wrapper ptr %ld", ptr);
   auto tts = reinterpret_cast<sherpa_onnx::OfflineTts *>(ptr);
+        //SHERPA_ONNX_LOGE("Generate t %s p %s sr %d sp %d st %d", p_text, p_prompt_text, sample_rate, speed, num_step);
   auto audio = tts->Generate(p_text, p_prompt_text, prompt_samples_vec, sample_rate, speed, num_step, callback_wrapper);
+      SHERPA_ONNX_LOGE("generateWithPromptWithCallbackImpl tts->Generate");
 
   jfloatArray samples_arr = env->NewFloatArray(audio.samples.size());
   env->SetFloatArrayRegion(samples_arr, 0, audio.samples.size(),

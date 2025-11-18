@@ -115,6 +115,8 @@ It will generate a file ./generated.wav as specified by --output-filename.
   const auto begin = std::chrono::steady_clock::now();
   auto audio = tts.Generate(po.GetArg(1), prompt_text, prompt_samples,
                             sample_rate, speed, num_steps, AudioCallback);
+  audio = tts.Generate(po.GetArg(1), prompt_text, prompt_samples,
+                            sample_rate, speed, num_steps, AudioCallback);
   const auto end = std::chrono::steady_clock::now();
 
   if (audio.samples.empty()) {

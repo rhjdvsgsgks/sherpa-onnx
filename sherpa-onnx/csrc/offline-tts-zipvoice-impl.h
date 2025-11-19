@@ -52,8 +52,6 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
       const std::vector<float> &prompt_samples, int32_t sample_rate,
       float speed, int32_t num_steps,
       GeneratedAudioCallback callback = nullptr) const override {
-      SHERPA_ONNX_LOGE("text='%s', prompt_text='%s', sample_count=%zu, rate=%d, speed=%.2f, steps=%d, callback_addr=%p", 
-     text.c_str(), prompt_text.c_str(), prompt_samples.size(), sample_rate, speed, num_steps, (void*)&callback);
     std::vector<TokenIDs> text_token_ids =
         frontend_->ConvertTextToTokenIds(text);
 
@@ -91,10 +89,8 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
     auto ans = Process(tokens, prompt_tokens, prompt_samples, sample_rate, speed,
                    num_steps);
     if (callback) {
-      SHERPA_ONNX_LOGE("start callback");
       callback(ans.samples.data(), ans.samples.size(), 1.0);
     }
-      SHERPA_ONNX_LOGE("finish callback");
     return ans;
   }
 
@@ -222,16 +218,6 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
                          const std::vector<float> &prompt_samples,
                          int32_t sample_rate, float speed,
                          int num_steps) const {
-	  SHERPA_ONNX_LOGE("Process tokens_sz=%zu(1st=%lld), p_tokens_sz=%zu(1st=%lld), p_samples_sz=%zu(1st=%.4f), rate=%d, speed=%.2f, steps=%d",
-     tokens.size(),
-     tokens.empty() ? 0LL : (long long)tokens[0],
-     prompt_tokens.size(),
-     prompt_tokens.empty() ? 0LL : (long long)prompt_tokens[0],
-     prompt_samples.size(),
-     prompt_samples.empty() ? 0.0f : prompt_samples[0],
-     sample_rate, 
-     speed, 
-     num_steps);
     auto memory_info =
         Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
 
@@ -271,7 +257,6 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
     auto res_shape = ComputeMelSpectrogram(prompt_samples_scaled, sample_rate,
                                            &prompt_features);
 
-      SHERPA_ONNX_LOGE("ComputeMelSpectrogram finished");
     int32_t num_frames = res_shape[0];
     int32_t mel_dim = res_shape[1];
 
@@ -286,11 +271,9 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
         memory_info, prompt_features.data(), prompt_features.size(),
         shape.data(), shape.size());
 
-      SHERPA_ONNX_LOGE("prompt_features_tensor");
     Ort::Value mel =
         model_->Run(std::move(tokens_tensor), std::move(prompt_tokens_tensor),
                     std::move(prompt_features_tensor), speed, num_steps);
-      SHERPA_ONNX_LOGE("mel");
 
     // Assume mel_shape = {1, T, C}
     std::vector<int64_t> mel_shape = mel.GetTensorTypeAndShapeInfo().GetShape();
@@ -299,7 +282,6 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
     float *mel_data = mel.GetTensorMutableData<float>();
     std::vector<float> mel_permuted(C * T);
 
-      SHERPA_ONNX_LOGE("mel_data");
     for (int64_t c = 0; c < C; ++c) {
       for (int64_t t = 0; t < T; ++t) {
         int64_t src_idx = t * C + c;  // src: [T, C] (row major)
@@ -308,18 +290,15 @@ class OfflineTtsZipvoiceImpl : public OfflineTtsImpl {
       }
     }
 
-      SHERPA_ONNX_LOGE("mel_permuted");
     std::array<int64_t, 3> new_shape = {1, C, T};
     Ort::Value mel_new = Ort::Value::CreateTensor<float>(
         memory_info, mel_permuted.data(), mel_permuted.size(), new_shape.data(),
         new_shape.size());
 
-      SHERPA_ONNX_LOGE("mel_new");
     GeneratedAudio ans;
     ans.samples = vocoder_->Run(std::move(mel_new));
     ans.sample_rate = model_->GetMetaData().sample_rate;
 
-      SHERPA_ONNX_LOGE("GeneratedAudio ans");
     if (prompt_rms < target_rms && target_rms > 0.0f) {
       float scale = prompt_rms / target_rms;
       for (auto &s : ans.samples) {

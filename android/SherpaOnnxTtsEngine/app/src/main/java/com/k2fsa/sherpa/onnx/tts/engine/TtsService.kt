@@ -152,7 +152,6 @@ class TtsService : TextToSpeechService() {
 
     val reader = WaveReader.readWave(application.assets, "sherpa-onnx-zipvoice-distill-zh-en-emilia/prompt.wav")
 
-        Log.i(TAG, "generateWithPromptWithCallback: $text $prompt_text ${reader.samples} ${reader.sampleRate} ${TtsEngine.speed} $ttsCallback")
 		    tts.generateWithPromptWithCallback(text, prompt_text, reader.samples, reader.sampleRate, TtsEngine.speed, callback = ttsCallback)} else tts.generateWithCallback(
             text = text,
             sid = TtsEngine.speakerId,

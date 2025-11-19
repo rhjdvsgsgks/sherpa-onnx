@@ -2,7 +2,6 @@
 package com.k2fsa.sherpa.onnx
 
 import android.content.res.AssetManager
-import android.util.Log
 
 data class OfflineTtsVitsModelConfig(
     var model: String = "",
@@ -164,7 +163,6 @@ class OfflineTts(
 	num_step: Int = 4,
         callback: (samples: FloatArray) -> Int
     ): GeneratedAudio {
-	    Log.i("generateWithPromptWithCallbackImpl_kt", "t $text pt $prompt_text ps $prompt_samples sr $sample_rate sp $speed st $num_step cb $callback")
         val objArray = generateWithPromptWithCallbackImpl(ptr, text, prompt_text, prompt_samples, sample_rate, speed, num_step, callback)
         return GeneratedAudio(
             samples = objArray[0] as FloatArray,

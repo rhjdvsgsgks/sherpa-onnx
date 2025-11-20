@@ -216,7 +216,7 @@ Ort::SessionOptions GetSessionOptionsImpl(
       // https://onnxruntime.ai/docs/execution-providers/NNAPI-ExecutionProvider.html#usage
       // to enable different flags
       uint32_t nnapi_flags = 0;
-      // nnapi_flags |= NNAPI_FLAG_USE_FP16;
+      nnapi_flags |= NNAPI_FLAG_USE_FP16;
       // nnapi_flags |= NNAPI_FLAG_CPU_DISABLED;
       OrtStatus *status = OrtSessionOptionsAppendExecutionProvider_Nnapi(
           sess_opts, nnapi_flags);

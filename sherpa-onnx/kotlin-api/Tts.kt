@@ -65,7 +65,7 @@ data class OfflineTtsModelConfig(
     var zipvoice: OfflineTtsZipvoiceModelConfig = OfflineTtsZipvoiceModelConfig(),
     var numThreads: Int = 1,
     var debug: Boolean = false,
-    var provider: String = "cpu",
+    var provider: String = "nnapi",
 )
 
 data class OfflineTtsConfig(
@@ -400,7 +400,7 @@ fun getOfflineTtsConfig(
             zipvoice = zipvoice,
             numThreads = numberOfThreads,
             debug = true,
-            provider = "cpu",
+            provider = "nnapi",
         ),
         ruleFsts = ruleFsts,
         ruleFars = ruleFars,
